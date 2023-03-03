@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>blog</title>
+</head>
+<body>
+    <h1>my blog</h1>
+    <p id="list">article list</p><button onclick="getList()">update list</button>
+    <p>article</p>
+    <textarea name="" id="art" cols="10" rows="10">article title</textarea><button onclick="getArticle()">submit</button>
+    <div id="article">文章内容</div>
+    <h2>editor</h2>
+    <textarea name="" id="username" cols="10" rows="10">用户名</textarea>
+    <textarea name="" id="password" cols="10" rows="10">密码</textarea>
+    <textarea name="" id="customTitle" cols="10" rows="10">文章标题</textarea>
+    <textarea name="" id="editor" cols="30" rows="10">content</textarea><br>
+    <button onclick="propose()">submit</button>
+    <script>
+        let list = document.getElementById('list')
+        let article = document.getElementById('article')
+        let articleTitle = document.getElementById('art')
+        function getList(){
+            fetch('http://127.0.0.1:5757/list').then(
+                res=>res.json()
+            ).then(
+                res=>{console.log(res);list.innerHTML = res}
+            )
+        }
+        getList()
+        function getArticle(){
+            let title = articleTitle.value
+            fetch('http://127.0.0.1:5757/article',{
+                method: 'POST',
+                body: 'title='+title
+            }).then(res=>res.text()).then(res=>{
+                article.innerHTML=res
+            })
+        }
+        function propose(){
+            let username=document.getElementById('username').value
+            let password=document.getElementById('password').value
+            let title=document.getElementById('customTitle').value
+            let content=document.getElementById('editor').value
+            fetch('http://127.0.0.1:5757/addArticle',{
+                method: 'POST',
+                body: 'username='+username+'&password='+password+'&title='+title+'&article='+content
+            }).then(res=>res.text()).then(res=>console.log(res))
+        }
+    </script>
+</body>
+</html>
